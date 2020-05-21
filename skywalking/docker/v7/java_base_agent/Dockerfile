@@ -15,5 +15,5 @@ RUN set -ex; \
     ln -sf /usr/share/zoneinfo/$TZ  /etc/localtime; \
     echo $TZ > /etc/timezone; \
     tar -zxvf /${PACKAGE_NAME}-${SKYWALKING_VERSION}.tar.gz; \ 
-    cp $DIST_NAME/agent/skywalking-agent.jar $AGNET_HOME; \
+    cp -r $DIST_NAME/agent/ $AGNET_HOME; \
     rm -rf "${PACKAGE_NAME}-${SKYWALKING_VERSION}.tar.gz"; rm -rf "$DIST_NAME";
