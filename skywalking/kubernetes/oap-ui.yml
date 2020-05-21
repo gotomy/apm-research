@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ui
+  namespace: skywalking
+  labels:
+    service: ui
+spec:
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+    name: http
+  selector:
+    app: ui
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ui-deployment
+  namespace: skywalking
+  labels:
+    app: ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ui
+  template:
+    metadata:
+      labels:
+        app: ui
+    spec:
+      containers:
+      - name: ui
+        image: registry.cn-beijing.aliyuncs.com/basicciimage/skywalking_oap_ui:7.0.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: http
+        resources:
+          requests:
+            memory: 1Gi
+          limits:
+            memory: 2Gi
+        env:
+        - name: SW_OAP_ADDRESS
+          value: oap:12800

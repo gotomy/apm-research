@@ -6,7 +6,9 @@ ENV SKYWALKING_VERSION=7.0.0 \
     TZ=Asia/Shanghai \
     PACKAGE_NAME=apache-skywalking-apm \
     DIST_NAME=apache-skywalking-apm-bin \
-    JAVA_OPTS=" -Xms512M -Xmx1024M"
+    JAVA_OPTS=" -Xms256M -Xmx512M" \
+    SW_OAP_ADDRESS="oap:12800" \
+    SW_TIMEOUT="20000"
 
 ADD http://mirrors.tuna.tsinghua.edu.cn/apache/skywalking/${SKYWALKING_VERSION}/${PACKAGE_NAME}-${SKYWALKING_VERSION}.tar.gz  /
 
@@ -25,6 +27,6 @@ WORKDIR $DIST_NAME
 COPY docker-entrypoint.sh .
 COPY logback.xml webapp/
 
-EXPOSE 12800 11800
+EXPOSE 8080
 
 ENTRYPOINT ["sh", "docker-entrypoint.sh"]
