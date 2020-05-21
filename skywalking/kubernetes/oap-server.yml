@@ -1,0 +1,93 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: skywalking-oap
+  namespace: skywalking
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: skywalking-oap
+  namespace: skywalking
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: skywalking-oap
+subjects:
+- kind: ServiceAccount
+  name: skywalking-oap
+  namespace: skywalking
+
+---
+
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: skywalking
+  name: skywalking-oap
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "watch", "list"]
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: oap
+  namespace: skywalking
+  labels:
+    service: oap
+spec:
+  ports:
+  - port: 12800
+    name: rest
+  - port: 11800
+    name: grpc
+  - port: 1234
+    name: page
+  selector:
+    app: oap
+  
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oap
+  namespace: skywalking
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oap
+  template:
+    metadata:
+      labels:
+        app: oap
+        release: skywalking
+    spec:
+      serviceAccountName: skywalking-oap
+      containers:
+      - name: oap
+        image: registry.cn-beijing.aliyuncs.com/basicciimage/skywalking_oap:7.0.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 11800
+          name: grpc
+        - containerPort: 12800
+          name: rest
+        resources:
+          requests:
+            memory: 1Gi
+          limits:
+            memory: 2Gi
+        env:
+        - name: JAVA_OPTS
+          value: -Xms256M -Xmx512M
+        - name: SW_STORAGE
+          value: elasticsearch7
+        - name: SW_STORAGE_ES_CLUSTER_NODES
+          value: "elasticsearch:9200"

@@ -4,8 +4,8 @@ LABEL maintainer="yang68ming@163.com"
 
 ENV SKYWALKING_VERSION=7.0.0 \
     TZ=Asia/Shanghai \
-    PACKAGE_NAME=apache-skywalking-apm \
-    DIST_NAME=apache-skywalking-apm-bin \
+    PACKAGE_NAME=apache-skywalking-apm-es7 \
+    DIST_NAME=apache-skywalking-apm-bin-es7 \
     JAVA_OPTS=" -Xms512M -Xmx1024M"
 
 ADD http://mirrors.tuna.tsinghua.edu.cn/apache/skywalking/${SKYWALKING_VERSION}/${PACKAGE_NAME}-${SKYWALKING_VERSION}.tar.gz  /

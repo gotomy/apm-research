@@ -8,5 +8,8 @@ do
     CLASSPATH="$i:$CLASSPATH"
 done
 
+echo "Configuration files:"
+ls -lt config
+
 exec java ${JAVA_OPTS} -classpath $CLASSPATH \
  org.apache.skywalking.oap.server.starter.OAPServerStartUp "$@"
