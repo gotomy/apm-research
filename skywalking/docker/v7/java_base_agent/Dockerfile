@@ -15,6 +15,8 @@ RUN set -ex; \
     echo $TZ > /etc/timezone; \
     tar -zxvf /${PACKAGE_NAME}-${SKYWALKING_VERSION}.tar.gz; \ 
     cp -r $DIST_NAME/agent/ /; \
-    cp $DIST_NAME/agent/optional-plugins/apm-trace-ignore-plugin-7.0.0.jar /agent/plugins/ \
-    cp apm-trace-ignore-plugin.config /agent/config/. \
-    rm -rf "${PACKAGE_NAME}-${SKYWALKING_VERSION}.tar.gz"; rm -rf "$DIST_NAME";
+    cp $DIST_NAME/agent/optional-plugins/apm-trace-ignore-plugin-7.0.0.jar /agent/plugins/; \
+    rm -rf "${PACKAGE_NAME}-${SKYWALKING_VERSION}.tar.gz"; \
+    rm -rf "$DIST_NAME";
+
+COPY apm-trace-ignore-plugin.config /agent/config/
