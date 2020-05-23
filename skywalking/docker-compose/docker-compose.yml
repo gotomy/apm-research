@@ -1,0 +1,42 @@
+version: '3.3'
+services:
+  elasticsearch:
+    image: registry.cn-beijing.aliyuncs.com/basicciimage/es_utc8:7.5
+    container_name: elasticsearch
+    restart: always
+    ports:
+      - 9200:9200
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+  oap:
+    image: registry.cn-beijing.aliyuncs.com/basicciimage/skywalking_oap:7.0.0
+    container_name: oap
+    depends_on:
+      - elasticsearch
+    links:
+      - elasticsearch
+    restart: always
+    ports:
+      - 11800:11800
+      - 12800:12800
+    environment:
+      SW_STORAGE: elasticsearch7
+      SW_STORAGE_ES_CLUSTER_NODES: elasticsearch:9200
+  ui:
+    image: egistry.cn-beijing.aliyuncs.com/basicciimage/skywalking_oap_ui:7.0.0
+    container_name: ui
+    depends_on:
+      - oap
+    links:
+      - oap
+    restart: always
+    ports:
+      - 8080:8080
+    environment:
+      SW_OAP_ADDRESS: oap:12800
